@@ -1,0 +1,15 @@
+target-version = "py310"
+
+[lint.pydocstyle]
+convention = "google"
+
+[lint]
+# Disable fix for unused imports (`F401`).
+unfixable = ["F401"]
+select = ["ALL"]
+
+[lint.per-file-ignores]
+"**/*.py" = [
+    "TD003",  # We don't always have links for TODOs
+    "FIX002", # No need to complain that it should be fixed, we know
+]
