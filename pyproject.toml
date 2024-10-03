@@ -16,6 +16,6 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 
-[project.urls]
+[project.urls] #noqa RUF200
 Homepage = "https://github.com/cmathews393/backupradar-python"
 Issues = "https://github.com/cmathews393/backupradar-python/issues"
