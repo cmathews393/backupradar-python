@@ -5,7 +5,7 @@ convention = "google"
 
 [lint]
 # Disable fix for unused imports (`F401`).
-unfixable = ["F401"]
+# unfixable = ["F401"]
 select = ["ALL"]
 
 [lint.per-file-ignores]
