@@ -30,8 +30,8 @@ class BackupRadarAPI:
         try:
             response = httpx.get(url, headers=self.headers, params=params)
             response.raise_for_status()
-            data = response.json()
-            return BackupRadarResponseModel(**data)
+
+            return BackupRadarResponseModel.model_validate_json(response.text)
         except httpx.HTTPError:
             logging.exception("HTTP Error")
         except Exception:
