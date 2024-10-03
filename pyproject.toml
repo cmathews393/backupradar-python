@@ -14,3 +14,8 @@ pydantic = "^2.9.2"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+
+[project.urls]
+Homepage = "https://github.com/cmathews393/backupradar-python"
+Issues = "https://github.com/cmathews393/backupradar-python/issues"
