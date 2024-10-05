@@ -3,7 +3,11 @@
 import logging
 
 import httpx
-from models import BackupRadarResponseModel
+from models import (
+    BackupRadarBackupModel,
+    BackupRadarQueryParams,
+    BackupRadarResponseModel,
+)
 
 
 class BackupRadarAPI:
@@ -22,10 +26,13 @@ class BackupRadarAPI:
             "Content-Type": "application/json",
         }
 
-    def get_backups(self, query_params: dict) -> BackupRadarResponseModel | None:
+    def get_backups(
+        self,
+        query_params: BackupRadarQueryParams,
+    ) -> BackupRadarResponseModel | None:
         """Get list of all backups."""
         url = f"{self.base_url}/backups"
-        params = {k: v for k, v in query_params.items() if v is not None}
+        params = {k: v for k, v in query_params.model_fields if v is not None}
 
         try:
             response = httpx.get(url, headers=self.headers, params=params)
@@ -38,3 +45,7 @@ class BackupRadarAPI:
             logging.exception("Other error occurred.")
 
         return None
+
+    def get_backup(self, query_params: dict) -> BackupRadarBackupModel | None:
+        """Get details on a single backup."""
+        return print("not implemented")
