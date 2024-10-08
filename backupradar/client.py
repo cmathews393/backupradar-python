@@ -46,6 +46,6 @@ class BackupRadarAPI:
 
         return None
 
-    def get_backup(self, query_params: dict) -> BackupRadarBackupModel | None:
+    def get_backup(self, query_params: dict) -> BackupRadarBackupModel | None:  # noqa: ARG002
         """Get details on a single backup."""
-        return print("not implemented")
+        return print("not implemented")  # noqa: T201

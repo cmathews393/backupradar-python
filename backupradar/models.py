@@ -1,22 +1,29 @@
 """Model definitions for requests and responses from the BackupRadar API."""
+
 import re
+
 from pydantic import BaseModel, ConfigDict
+
 regex_for_camel = re.compile(
     r"""
         (?<=[a-z])      # preceded by lowercase
         (?=[A-Z])       # fol
     """,
-    re.X,
+    re.VERBOSE,
 )
+
+
 def to_snake(string: str) -> str:
     """Convert camelCase string to snake_case."""
-    return regex_for_camel.sub('_', string).lower()
+    return regex_for_camel.sub("_", string).lower()
+
 
 class StatusModel(BaseModel):
     """Status model for BackupRadar responses.
 
     "name" could be better represented as status, i.e. Success/Failure.
     """
+
     model_config = ConfigDict(alias_generator=to_snake)
     id: int
     name: str
@@ -102,7 +109,8 @@ class BackupRadarQueryParams(BaseModel):
     exclude_backup_methods: list[str] | None
     policy_types: list[str] | None
 
-# class BackupRadarBackupModel(BaseModel):
-    
 
-class BackupRadarSingleBackupQuery(BaseModel):
+# class BackupRadarBackupModel(BaseModel):
+
+
+# class BackupRadarSingleBackupQuery(BaseModel):
