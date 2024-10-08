@@ -4,6 +4,7 @@ on:
   workflow_run:
     workflows: [build and lint]
     types: [completed]
+  workflow_dispatch:
 jobs:
   publish-to-pypi:
     name: Publish to PyPi
