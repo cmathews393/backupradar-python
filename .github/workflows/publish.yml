@@ -2,7 +2,7 @@ name: publish
 
 on:
   workflow_run:
-    workflows: ["build + lint"]
+    workflows: [build + lint]
     types:
       - completed
 
