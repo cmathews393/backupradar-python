@@ -32,8 +32,7 @@ class BackupRadarAPI:
     ) -> BackupRadarResponseModel | None:
         """Get list of all backups."""
         url = f"{self.base_url}/backups"
-        params = {k: v for k, v in query_params.model_fields if v is not None}
-
+        params = query_params.model_dump(exclude_unset=True)
         try:
             response = httpx.get(url, headers=self.headers, params=params)
             response.raise_for_status()
