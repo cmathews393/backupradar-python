@@ -1,0 +1,3019 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Backup Radar API - 2.0",
+    "description": "<p><b>Build:</b> 1.0.0-20241015-0644+0e3e7febf8af6934623e540a6bcc125d2a7594d1</p>",
+    "version": "2.0"
+  },
+  "paths": {
+    "/backups": {
+      "get": {
+        "tags": ["Backups"],
+        "summary": "Get backups with pagination.",
+        "description": "Returns scheduled backups(policies) that satisfy the provided filters and paginate them.\r\n            \r\nThrottling policy: not often than 1 request per 0.5 seconds.",
+        "parameters": [
+          {
+            "name": "Page",
+            "in": "query",
+            "description": "Page number to get from the API. Default: 1.",
+            "schema": {
+              "maximum": 2147483647,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Size",
+            "in": "query",
+            "description": "Size of the page to get from the API. Default: 50. Max page size: 1000.",
+            "schema": {
+              "maximum": 1000,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "SearchByCompanyName",
+            "in": "query",
+            "description": "Search by company name.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SearchByDeviceName",
+            "in": "query",
+            "description": "Search by device name.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SearchByJobName",
+            "in": "query",
+            "description": "Search by job name.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SearchByBackupMethod",
+            "in": "query",
+            "description": "Search by backup method.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SearchByTooltip",
+            "in": "query",
+            "description": "Search by backup note.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SearchByTag",
+            "in": "query",
+            "description": "Search by tag.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "DaysWithoutSuccess",
+            "in": "query",
+            "description": "Filter by days without success.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "HistoryDays",
+            "in": "query",
+            "description": "Count of days to get backup history. Default: 0 days(without history). Maximum: 31 days.",
+            "schema": {
+              "maximum": 31,
+              "minimum": 0,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "FilterScheduled",
+            "in": "query",
+            "description": "Filter only scheduled backups.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "description": "Date from (Example: 2018-02-14).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "searchString",
+            "in": "query",
+            "description": "Search string.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "companies",
+            "in": "query",
+            "description": "Filter by companies.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "description": "Filter by tags.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "excludeTags",
+            "in": "query",
+            "description": "Exclude the policies with the specific tags.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "backupMethods",
+            "in": "query",
+            "description": "Filter by backup methods.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "deviceTypes",
+            "in": "query",
+            "description": "Filter by device type.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "excludeDeviceTypes",
+            "in": "query",
+            "description": "Exclude the policies with the specific device types.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "statuses",
+            "in": "query",
+            "description": "Filter by statuses.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "policyIds",
+            "in": "query",
+            "description": "Include only the policies with the listed Ids.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "excludeBackupMethods",
+            "in": "query",
+            "description": "Exclude the policies with the specific backup methods.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "policyTypes",
+            "in": "query",
+            "description": "Filter by policy type.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.V2.ApiPaginatedViewModel`1[[BackupRadar.Models.PublicAPI.V2.ApiBackup, BackupRadar.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                },
+                "example": {
+                  "Total": 2,
+                  "Page": 1,
+                  "PageSize": 10,
+                  "TotalPages": 1,
+                  "Results": [
+                    {
+                      "ticketingCompany": "CW Company",
+                      "status": {
+                        "id": 1,
+                        "name": "Success"
+                      },
+                      "daysInStatus": 0.24,
+                      "isVerified": false,
+                      "lastResult": "2024-10-15T17:59:44",
+                      "lastSuccess": "2024-10-15T17:59:44",
+                      "ticketCount": 2,
+                      "failureThreshold": 2,
+                      "treatWarningAsSuccess": false,
+                      "note": "Some note from user",
+                      "dayStartHour": 2,
+                      "tags": ["Veeam"],
+                      "standalone": false,
+                      "history": [
+                        {
+                          "status": {
+                            "id": 3,
+                            "name": "Failure"
+                          },
+                          "lastResultDate": "2024-10-11T00:00:00",
+                          "isScheduled": true,
+                          "daysInStatus": 5.3,
+                          "date": "2024-10-11T00:00:00",
+                          "countFailure": 1,
+                          "countWarning": 0,
+                          "countSuccess": 0,
+                          "countNoResult": 0,
+                          "daysSinceLastResult": 5,
+                          "daysSinceLastGoodResult": -1,
+                          "resultsCount": 1
+                        },
+                        {
+                          "status": {
+                            "id": 1,
+                            "name": "Success"
+                          },
+                          "lastResultDate": "2024-10-12T00:00:00",
+                          "isScheduled": true,
+                          "daysInStatus": 0.3,
+                          "date": "2024-10-12T00:00:00",
+                          "countFailure": 0,
+                          "countWarning": 0,
+                          "countSuccess": 1,
+                          "countNoResult": 0,
+                          "daysSinceLastResult": 0.3,
+                          "daysSinceLastGoodResult": 0.3,
+                          "resultsCount": 1
+                        }
+                      ],
+                      "backupId": 1000,
+                      "companyName": "ABC Company",
+                      "deviceName": "BR-VK24",
+                      "deviceType": "Server",
+                      "jobName": "BR Daily Report",
+                      "methodName": "Veeam",
+                      "backupType": {
+                        "id": 0,
+                        "name": "Backup"
+                      }
+                    },
+                    {
+                      "ticketingCompany": "CW Company",
+                      "status": {
+                        "id": 3,
+                        "name": "Failure"
+                      },
+                      "daysInStatus": 0.24,
+                      "isVerified": true,
+                      "lastResult": "2024-10-15T15:59:44",
+                      "lastSuccess": "2024-10-15T15:59:44",
+                      "ticketCount": 0,
+                      "failureThreshold": 2,
+                      "treatWarningAsSuccess": true,
+                      "dayStartHour": 0,
+                      "tags": ["Veeam"],
+                      "standalone": false,
+                      "history": [
+                        {
+                          "status": {
+                            "id": 2,
+                            "name": "Warning"
+                          },
+                          "lastResultDate": "2024-10-14T00:00:00",
+                          "isScheduled": true,
+                          "daysInStatus": 2,
+                          "date": "2024-10-14T00:00:00",
+                          "countFailure": 0,
+                          "countWarning": 1,
+                          "countSuccess": 0,
+                          "countNoResult": 0,
+                          "daysSinceLastResult": 1,
+                          "daysSinceLastGoodResult": -1,
+                          "resultsCount": 1
+                        },
+                        {
+                          "status": {
+                            "id": 3,
+                            "name": "Failure"
+                          },
+                          "lastResultDate": "2024-10-15T00:00:00",
+                          "isScheduled": true,
+                          "daysInStatus": 0.3,
+                          "date": "2024-10-15T00:00:00",
+                          "countFailure": 1,
+                          "countWarning": 0,
+                          "countSuccess": 0,
+                          "countNoResult": 0,
+                          "daysSinceLastResult": 0.3,
+                          "daysSinceLastGoodResult": -1,
+                          "resultsCount": 1
+                        }
+                      ],
+                      "backupId": 1000,
+                      "companyName": "DEF Company",
+                      "deviceName": "BR-OD21",
+                      "deviceType": "Server",
+                      "jobName": "BR Daily Report",
+                      "methodName": "Veeam",
+                      "backupType": {
+                        "id": 0,
+                        "name": "Backup"
+                      }
+                    }
+                  ]
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.V2.ApiPaginatedViewModel`1[[BackupRadar.Models.PublicAPI.V2.ApiBackup, BackupRadar.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                },
+                "example": {
+                  "Total": 2,
+                  "Page": 1,
+                  "PageSize": 10,
+                  "TotalPages": 1,
+                  "Results": [
+                    {
+                      "ticketingCompany": "CW Company",
+                      "status": {
+                        "id": 1,
+                        "name": "Success"
+                      },
+                      "daysInStatus": 0.24,
+                      "isVerified": false,
+                      "lastResult": "2024-10-15T17:59:44",
+                      "lastSuccess": "2024-10-15T17:59:44",
+                      "ticketCount": 2,
+                      "failureThreshold": 2,
+                      "treatWarningAsSuccess": false,
+                      "note": "Some note from user",
+                      "dayStartHour": 2,
+                      "tags": ["Veeam"],
+                      "standalone": false,
+                      "history": [
+                        {
+                          "status": {
+                            "id": 3,
+                            "name": "Failure"
+                          },
+                          "lastResultDate": "2024-10-11T00:00:00",
+                          "isScheduled": true,
+                          "daysInStatus": 5.3,
+                          "date": "2024-10-11T00:00:00",
+                          "countFailure": 1,
+                          "countWarning": 0,
+                          "countSuccess": 0,
+                          "countNoResult": 0,
+                          "daysSinceLastResult": 5,
+                          "daysSinceLastGoodResult": -1,
+                          "resultsCount": 1
+                        },
+                        {
+                          "status": {
+                            "id": 1,
+                            "name": "Success"
+                          },
+                          "lastResultDate": "2024-10-12T00:00:00",
+                          "isScheduled": true,
+                          "daysInStatus": 0.3,
+                          "date": "2024-10-12T00:00:00",
+                          "countFailure": 0,
+                          "countWarning": 0,
+                          "countSuccess": 1,
+                          "countNoResult": 0,
+                          "daysSinceLastResult": 0.3,
+                          "daysSinceLastGoodResult": 0.3,
+                          "resultsCount": 1
+                        }
+                      ],
+                      "backupId": 1000,
+                      "companyName": "ABC Company",
+                      "deviceName": "BR-VK24",
+                      "deviceType": "Server",
+                      "jobName": "BR Daily Report",
+                      "methodName": "Veeam",
+                      "backupType": {
+                        "id": 0,
+                        "name": "Backup"
+                      }
+                    },
+                    {
+                      "ticketingCompany": "CW Company",
+                      "status": {
+                        "id": 3,
+                        "name": "Failure"
+                      },
+                      "daysInStatus": 0.24,
+                      "isVerified": true,
+                      "lastResult": "2024-10-15T15:59:44",
+                      "lastSuccess": "2024-10-15T15:59:44",
+                      "ticketCount": 0,
+                      "failureThreshold": 2,
+                      "treatWarningAsSuccess": true,
+                      "dayStartHour": 0,
+                      "tags": ["Veeam"],
+                      "standalone": false,
+                      "history": [
+                        {
+                          "status": {
+                            "id": 2,
+                            "name": "Warning"
+                          },
+                          "lastResultDate": "2024-10-14T00:00:00",
+                          "isScheduled": true,
+                          "daysInStatus": 2,
+                          "date": "2024-10-14T00:00:00",
+                          "countFailure": 0,
+                          "countWarning": 1,
+                          "countSuccess": 0,
+                          "countNoResult": 0,
+                          "daysSinceLastResult": 1,
+                          "daysSinceLastGoodResult": -1,
+                          "resultsCount": 1
+                        },
+                        {
+                          "status": {
+                            "id": 3,
+                            "name": "Failure"
+                          },
+                          "lastResultDate": "2024-10-15T00:00:00",
+                          "isScheduled": true,
+                          "daysInStatus": 0.3,
+                          "date": "2024-10-15T00:00:00",
+                          "countFailure": 1,
+                          "countWarning": 0,
+                          "countSuccess": 0,
+                          "countNoResult": 0,
+                          "daysSinceLastResult": 0.3,
+                          "daysSinceLastGoodResult": -1,
+                          "resultsCount": 1
+                        }
+                      ],
+                      "backupId": 1000,
+                      "companyName": "DEF Company",
+                      "deviceName": "BR-OD21",
+                      "deviceType": "Server",
+                      "jobName": "BR Daily Report",
+                      "methodName": "Veeam",
+                      "backupType": {
+                        "id": 0,
+                        "name": "Backup"
+                      }
+                    }
+                  ]
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.V2.ApiPaginatedViewModel`1[[BackupRadar.Models.PublicAPI.V2.ApiBackup, BackupRadar.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                },
+                "example": {
+                  "Total": 2,
+                  "Page": 1,
+                  "PageSize": 10,
+                  "TotalPages": 1,
+                  "Results": [
+                    {
+                      "ticketingCompany": "CW Company",
+                      "status": {
+                        "id": 1,
+                        "name": "Success"
+                      },
+                      "daysInStatus": 0.24,
+                      "isVerified": false,
+                      "lastResult": "2024-10-15T17:59:44",
+                      "lastSuccess": "2024-10-15T17:59:44",
+                      "ticketCount": 2,
+                      "failureThreshold": 2,
+                      "treatWarningAsSuccess": false,
+                      "note": "Some note from user",
+                      "dayStartHour": 2,
+                      "tags": ["Veeam"],
+                      "standalone": false,
+                      "history": [
+                        {
+                          "status": {
+                            "id": 3,
+                            "name": "Failure"
+                          },
+                          "lastResultDate": "2024-10-11T00:00:00",
+                          "isScheduled": true,
+                          "daysInStatus": 5.3,
+                          "date": "2024-10-11T00:00:00",
+                          "countFailure": 1,
+                          "countWarning": 0,
+                          "countSuccess": 0,
+                          "countNoResult": 0,
+                          "daysSinceLastResult": 5,
+                          "daysSinceLastGoodResult": -1,
+                          "resultsCount": 1
+                        },
+                        {
+                          "status": {
+                            "id": 1,
+                            "name": "Success"
+                          },
+                          "lastResultDate": "2024-10-12T00:00:00",
+                          "isScheduled": true,
+                          "daysInStatus": 0.3,
+                          "date": "2024-10-12T00:00:00",
+                          "countFailure": 0,
+                          "countWarning": 0,
+                          "countSuccess": 1,
+                          "countNoResult": 0,
+                          "daysSinceLastResult": 0.3,
+                          "daysSinceLastGoodResult": 0.3,
+                          "resultsCount": 1
+                        }
+                      ],
+                      "backupId": 1000,
+                      "companyName": "ABC Company",
+                      "deviceName": "BR-VK24",
+                      "deviceType": "Server",
+                      "jobName": "BR Daily Report",
+                      "methodName": "Veeam",
+                      "backupType": {
+                        "id": 0,
+                        "name": "Backup"
+                      }
+                    },
+                    {
+                      "ticketingCompany": "CW Company",
+                      "status": {
+                        "id": 3,
+                        "name": "Failure"
+                      },
+                      "daysInStatus": 0.24,
+                      "isVerified": true,
+                      "lastResult": "2024-10-15T15:59:44",
+                      "lastSuccess": "2024-10-15T15:59:44",
+                      "ticketCount": 0,
+                      "failureThreshold": 2,
+                      "treatWarningAsSuccess": true,
+                      "dayStartHour": 0,
+                      "tags": ["Veeam"],
+                      "standalone": false,
+                      "history": [
+                        {
+                          "status": {
+                            "id": 2,
+                            "name": "Warning"
+                          },
+                          "lastResultDate": "2024-10-14T00:00:00",
+                          "isScheduled": true,
+                          "daysInStatus": 2,
+                          "date": "2024-10-14T00:00:00",
+                          "countFailure": 0,
+                          "countWarning": 1,
+                          "countSuccess": 0,
+                          "countNoResult": 0,
+                          "daysSinceLastResult": 1,
+                          "daysSinceLastGoodResult": -1,
+                          "resultsCount": 1
+                        },
+                        {
+                          "status": {
+                            "id": 3,
+                            "name": "Failure"
+                          },
+                          "lastResultDate": "2024-10-15T00:00:00",
+                          "isScheduled": true,
+                          "daysInStatus": 0.3,
+                          "date": "2024-10-15T00:00:00",
+                          "countFailure": 1,
+                          "countWarning": 0,
+                          "countSuccess": 0,
+                          "countNoResult": 0,
+                          "daysSinceLastResult": 0.3,
+                          "daysSinceLastGoodResult": -1,
+                          "resultsCount": 1
+                        }
+                      ],
+                      "backupId": 1000,
+                      "companyName": "DEF Company",
+                      "deviceName": "BR-OD21",
+                      "deviceType": "Server",
+                      "jobName": "BR Daily Report",
+                      "methodName": "Veeam",
+                      "backupType": {
+                        "id": 0,
+                        "name": "Backup"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Invalid ApiKey"
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Invalid ApiKey"
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Invalid ApiKey"
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Quota exceeded. Maximum requests allowed: 1 per 5s. Please try again in 4 second(s)."
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Quota exceeded. Maximum requests allowed: 1 per 5s. Please try again in 4 second(s)."
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Quota exceeded. Maximum requests allowed: 1 per 5s. Please try again in 4 second(s)."
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ]
+      }
+    },
+    "/backups/bg": {
+      "get": {
+        "tags": ["Backups"],
+        "summary": "Get backups for BrightGauge with pagination.",
+        "description": "Returns scheduled backups(policies) that satisfy the provided filters and paginate them.\r\n            \r\nThrottling policy: not often than 1 request per 0.5 seconds.",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "description": "Date from (Example: 2018-02-14). Default: Today.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "days",
+            "in": "query",
+            "description": "Amount of days to fetch. Default: 1. Max Value: 31.",
+            "schema": {
+              "maximum": 31,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "includeResults",
+            "in": "query",
+            "description": "Include raw results. Default: false.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "includeHistoryDetails",
+            "in": "query",
+            "description": "Include history details (result counts). Default: false.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "description": "Page number to get from the API. Default: 1.",
+            "schema": {
+              "maximum": 2147483647,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Size",
+            "in": "query",
+            "description": "Size of the page to get from the API. Default: 50. Max page size: 1000.",
+            "schema": {
+              "maximum": 1000,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.V2.ApiPaginatedViewModel`1[[BackupRadar.Models.PublicAPI.V2.ApiBrightGaugeBackup, BackupRadar.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                },
+                "example": {
+                  "Total": 2,
+                  "Page": 1,
+                  "PageSize": 10,
+                  "TotalPages": 1,
+                  "Results": [
+                    {
+                      "id": 1000,
+                      "job": "BR Daily Report",
+                      "device": "BR-VK24",
+                      "company": "ABC Company",
+                      "deviceType": "Server",
+                      "ticketingCompany": "CW Company",
+                      "method": "Veeam",
+                      "isVerified": false,
+                      "history": [
+                        {
+                          "status": {
+                            "id": 3,
+                            "name": "Failure"
+                          },
+                          "lastResultDate": "2024-10-11T00:00:00",
+                          "isScheduled": true,
+                          "daysInStatus": 5.3,
+                          "date": "2024-10-11T00:00:00",
+                          "countFailure": 1,
+                          "countWarning": 0,
+                          "countSuccess": 0,
+                          "countNoResult": 0,
+                          "daysSinceLastResult": 5,
+                          "daysSinceLastGoodResult": -1,
+                          "resultsCount": 1
+                        },
+                        {
+                          "status": {
+                            "id": 1,
+                            "name": "Success"
+                          },
+                          "lastResultDate": "2024-10-12T00:00:00",
+                          "isScheduled": true,
+                          "daysInStatus": 0.3,
+                          "date": "2024-10-12T00:00:00",
+                          "countFailure": 0,
+                          "countWarning": 0,
+                          "countSuccess": 1,
+                          "countNoResult": 0,
+                          "daysSinceLastResult": 0.3,
+                          "daysSinceLastGoodResult": 0.3,
+                          "resultsCount": 1
+                        }
+                      ],
+                      "results": {
+                        "2024-10-12T00:00:00": [
+                          {
+                            "dateTime": "2024-10-12T05:00:00",
+                            "success": true,
+                            "warning": false,
+                            "failure": false,
+                            "manual": false,
+                            "resultId": "1000_638643060000000000_1"
+                          }
+                        ],
+                        "2024-10-11T00:00:00": [
+                          {
+                            "dateTime": "2024-10-11T04:00:00",
+                            "success": true,
+                            "warning": false,
+                            "failure": false,
+                            "manual": false,
+                            "resultId": "1000_638642160000000000_4"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "id": 1001,
+                      "job": "BR Daily Report",
+                      "device": "BR-OD21",
+                      "company": "DEF Company",
+                      "deviceType": "Server",
+                      "ticketingCompany": "CW Company",
+                      "method": "Veeam",
+                      "isVerified": true,
+                      "history": [
+                        {
+                          "status": {
+                            "id": 2,
+                            "name": "Warning"
+                          },
+                          "lastResultDate": "2024-10-14T00:00:00",
+                          "isScheduled": true,
+                          "daysInStatus": 2,
+                          "date": "2024-10-14T00:00:00",
+                          "countFailure": 0,
+                          "countWarning": 1,
+                          "countSuccess": 0,
+                          "countNoResult": 0,
+                          "daysSinceLastResult": 1,
+                          "daysSinceLastGoodResult": -1,
+                          "resultsCount": 1
+                        },
+                        {
+                          "status": {
+                            "id": 3,
+                            "name": "Failure"
+                          },
+                          "lastResultDate": "2024-10-15T00:00:00",
+                          "isScheduled": true,
+                          "daysInStatus": 0.3,
+                          "date": "2024-10-15T00:00:00",
+                          "countFailure": 1,
+                          "countWarning": 0,
+                          "countSuccess": 0,
+                          "countNoResult": 0,
+                          "daysSinceLastResult": 0.3,
+                          "daysSinceLastGoodResult": -1,
+                          "resultsCount": 1
+                        }
+                      ],
+                      "results": {}
+                    }
+                  ]
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.V2.ApiPaginatedViewModel`1[[BackupRadar.Models.PublicAPI.V2.ApiBrightGaugeBackup, BackupRadar.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                },
+                "example": {
+                  "Total": 2,
+                  "Page": 1,
+                  "PageSize": 10,
+                  "TotalPages": 1,
+                  "Results": [
+                    {
+                      "id": 1000,
+                      "job": "BR Daily Report",
+                      "device": "BR-VK24",
+                      "company": "ABC Company",
+                      "deviceType": "Server",
+                      "ticketingCompany": "CW Company",
+                      "method": "Veeam",
+                      "isVerified": false,
+                      "history": [
+                        {
+                          "status": {
+                            "id": 3,
+                            "name": "Failure"
+                          },
+                          "lastResultDate": "2024-10-11T00:00:00",
+                          "isScheduled": true,
+                          "daysInStatus": 5.3,
+                          "date": "2024-10-11T00:00:00",
+                          "countFailure": 1,
+                          "countWarning": 0,
+                          "countSuccess": 0,
+                          "countNoResult": 0,
+                          "daysSinceLastResult": 5,
+                          "daysSinceLastGoodResult": -1,
+                          "resultsCount": 1
+                        },
+                        {
+                          "status": {
+                            "id": 1,
+                            "name": "Success"
+                          },
+                          "lastResultDate": "2024-10-12T00:00:00",
+                          "isScheduled": true,
+                          "daysInStatus": 0.3,
+                          "date": "2024-10-12T00:00:00",
+                          "countFailure": 0,
+                          "countWarning": 0,
+                          "countSuccess": 1,
+                          "countNoResult": 0,
+                          "daysSinceLastResult": 0.3,
+                          "daysSinceLastGoodResult": 0.3,
+                          "resultsCount": 1
+                        }
+                      ],
+                      "results": {
+                        "2024-10-12T00:00:00": [
+                          {
+                            "dateTime": "2024-10-12T05:00:00",
+                            "success": true,
+                            "warning": false,
+                            "failure": false,
+                            "manual": false,
+                            "resultId": "1000_638643060000000000_1"
+                          }
+                        ],
+                        "2024-10-11T00:00:00": [
+                          {
+                            "dateTime": "2024-10-11T04:00:00",
+                            "success": true,
+                            "warning": false,
+                            "failure": false,
+                            "manual": false,
+                            "resultId": "1000_638642160000000000_4"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "id": 1001,
+                      "job": "BR Daily Report",
+                      "device": "BR-OD21",
+                      "company": "DEF Company",
+                      "deviceType": "Server",
+                      "ticketingCompany": "CW Company",
+                      "method": "Veeam",
+                      "isVerified": true,
+                      "history": [
+                        {
+                          "status": {
+                            "id": 2,
+                            "name": "Warning"
+                          },
+                          "lastResultDate": "2024-10-14T00:00:00",
+                          "isScheduled": true,
+                          "daysInStatus": 2,
+                          "date": "2024-10-14T00:00:00",
+                          "countFailure": 0,
+                          "countWarning": 1,
+                          "countSuccess": 0,
+                          "countNoResult": 0,
+                          "daysSinceLastResult": 1,
+                          "daysSinceLastGoodResult": -1,
+                          "resultsCount": 1
+                        },
+                        {
+                          "status": {
+                            "id": 3,
+                            "name": "Failure"
+                          },
+                          "lastResultDate": "2024-10-15T00:00:00",
+                          "isScheduled": true,
+                          "daysInStatus": 0.3,
+                          "date": "2024-10-15T00:00:00",
+                          "countFailure": 1,
+                          "countWarning": 0,
+                          "countSuccess": 0,
+                          "countNoResult": 0,
+                          "daysSinceLastResult": 0.3,
+                          "daysSinceLastGoodResult": -1,
+                          "resultsCount": 1
+                        }
+                      ],
+                      "results": {}
+                    }
+                  ]
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.V2.ApiPaginatedViewModel`1[[BackupRadar.Models.PublicAPI.V2.ApiBrightGaugeBackup, BackupRadar.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                },
+                "example": {
+                  "Total": 2,
+                  "Page": 1,
+                  "PageSize": 10,
+                  "TotalPages": 1,
+                  "Results": [
+                    {
+                      "id": 1000,
+                      "job": "BR Daily Report",
+                      "device": "BR-VK24",
+                      "company": "ABC Company",
+                      "deviceType": "Server",
+                      "ticketingCompany": "CW Company",
+                      "method": "Veeam",
+                      "isVerified": false,
+                      "history": [
+                        {
+                          "status": {
+                            "id": 3,
+                            "name": "Failure"
+                          },
+                          "lastResultDate": "2024-10-11T00:00:00",
+                          "isScheduled": true,
+                          "daysInStatus": 5.3,
+                          "date": "2024-10-11T00:00:00",
+                          "countFailure": 1,
+                          "countWarning": 0,
+                          "countSuccess": 0,
+                          "countNoResult": 0,
+                          "daysSinceLastResult": 5,
+                          "daysSinceLastGoodResult": -1,
+                          "resultsCount": 1
+                        },
+                        {
+                          "status": {
+                            "id": 1,
+                            "name": "Success"
+                          },
+                          "lastResultDate": "2024-10-12T00:00:00",
+                          "isScheduled": true,
+                          "daysInStatus": 0.3,
+                          "date": "2024-10-12T00:00:00",
+                          "countFailure": 0,
+                          "countWarning": 0,
+                          "countSuccess": 1,
+                          "countNoResult": 0,
+                          "daysSinceLastResult": 0.3,
+                          "daysSinceLastGoodResult": 0.3,
+                          "resultsCount": 1
+                        }
+                      ],
+                      "results": {
+                        "2024-10-12T00:00:00": [
+                          {
+                            "dateTime": "2024-10-12T05:00:00",
+                            "success": true,
+                            "warning": false,
+                            "failure": false,
+                            "manual": false,
+                            "resultId": "1000_638643060000000000_1"
+                          }
+                        ],
+                        "2024-10-11T00:00:00": [
+                          {
+                            "dateTime": "2024-10-11T04:00:00",
+                            "success": true,
+                            "warning": false,
+                            "failure": false,
+                            "manual": false,
+                            "resultId": "1000_638642160000000000_4"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "id": 1001,
+                      "job": "BR Daily Report",
+                      "device": "BR-OD21",
+                      "company": "DEF Company",
+                      "deviceType": "Server",
+                      "ticketingCompany": "CW Company",
+                      "method": "Veeam",
+                      "isVerified": true,
+                      "history": [
+                        {
+                          "status": {
+                            "id": 2,
+                            "name": "Warning"
+                          },
+                          "lastResultDate": "2024-10-14T00:00:00",
+                          "isScheduled": true,
+                          "daysInStatus": 2,
+                          "date": "2024-10-14T00:00:00",
+                          "countFailure": 0,
+                          "countWarning": 1,
+                          "countSuccess": 0,
+                          "countNoResult": 0,
+                          "daysSinceLastResult": 1,
+                          "daysSinceLastGoodResult": -1,
+                          "resultsCount": 1
+                        },
+                        {
+                          "status": {
+                            "id": 3,
+                            "name": "Failure"
+                          },
+                          "lastResultDate": "2024-10-15T00:00:00",
+                          "isScheduled": true,
+                          "daysInStatus": 0.3,
+                          "date": "2024-10-15T00:00:00",
+                          "countFailure": 1,
+                          "countWarning": 0,
+                          "countSuccess": 0,
+                          "countNoResult": 0,
+                          "daysSinceLastResult": 0.3,
+                          "daysSinceLastGoodResult": -1,
+                          "resultsCount": 1
+                        }
+                      ],
+                      "results": {}
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Invalid ApiKey"
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Invalid ApiKey"
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Invalid ApiKey"
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Quota exceeded. Maximum requests allowed: 1 per 5s. Please try again in 4 second(s)."
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Quota exceeded. Maximum requests allowed: 1 per 5s. Please try again in 4 second(s)."
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Quota exceeded. Maximum requests allowed: 1 per 5s. Please try again in 4 second(s)."
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ]
+      }
+    },
+    "/backups/{backupId}": {
+      "get": {
+        "tags": ["Backups"],
+        "summary": "Get backups data.",
+        "description": "Returns backup data for specific day.\r\n            \r\nThrottling policy: not often than 1 request per 0.5 seconds.",
+        "parameters": [
+          {
+            "name": "backupId",
+            "in": "path",
+            "description": "Backup Id.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "description": "Date. <para />(Example: 2018-02-14).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.V2.ApiBackup"
+                },
+                "example": {
+                  "ticketingCompany": "CW Company",
+                  "status": {
+                    "id": 2,
+                    "name": "Warning"
+                  },
+                  "daysInStatus": 0.24,
+                  "isVerified": false,
+                  "lastResult": "2024-10-15T21:59:44",
+                  "lastSuccess": "2024-10-15T21:59:44",
+                  "ticketCount": 1,
+                  "failureThreshold": 3,
+                  "treatWarningAsSuccess": true,
+                  "note": "Some note from user",
+                  "dayStartHour": 0,
+                  "tags": ["Veeam"],
+                  "standalone": true,
+                  "history": [
+                    {
+                      "status": {
+                        "id": 1,
+                        "name": "Success"
+                      },
+                      "lastResultDate": "2024-10-15T00:00:00",
+                      "isScheduled": true,
+                      "daysInStatus": 0.3,
+                      "date": "2024-10-15T00:00:00",
+                      "countFailure": 0,
+                      "countWarning": 0,
+                      "countSuccess": 1,
+                      "countNoResult": 0,
+                      "daysSinceLastResult": 0.3,
+                      "daysSinceLastGoodResult": 0.3,
+                      "resultsCount": 1
+                    }
+                  ],
+                  "backupId": 1003,
+                  "companyName": "XYZ Company",
+                  "deviceName": "BR-DVS01",
+                  "deviceType": "Server",
+                  "jobName": "BR Daily Report",
+                  "methodName": "Veeam",
+                  "backupType": {
+                    "id": 0,
+                    "name": "Backup"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.V2.ApiBackup"
+                },
+                "example": {
+                  "ticketingCompany": "CW Company",
+                  "status": {
+                    "id": 2,
+                    "name": "Warning"
+                  },
+                  "daysInStatus": 0.24,
+                  "isVerified": false,
+                  "lastResult": "2024-10-15T21:59:44",
+                  "lastSuccess": "2024-10-15T21:59:44",
+                  "ticketCount": 1,
+                  "failureThreshold": 3,
+                  "treatWarningAsSuccess": true,
+                  "note": "Some note from user",
+                  "dayStartHour": 0,
+                  "tags": ["Veeam"],
+                  "standalone": true,
+                  "history": [
+                    {
+                      "status": {
+                        "id": 1,
+                        "name": "Success"
+                      },
+                      "lastResultDate": "2024-10-15T00:00:00",
+                      "isScheduled": true,
+                      "daysInStatus": 0.3,
+                      "date": "2024-10-15T00:00:00",
+                      "countFailure": 0,
+                      "countWarning": 0,
+                      "countSuccess": 1,
+                      "countNoResult": 0,
+                      "daysSinceLastResult": 0.3,
+                      "daysSinceLastGoodResult": 0.3,
+                      "resultsCount": 1
+                    }
+                  ],
+                  "backupId": 1003,
+                  "companyName": "XYZ Company",
+                  "deviceName": "BR-DVS01",
+                  "deviceType": "Server",
+                  "jobName": "BR Daily Report",
+                  "methodName": "Veeam",
+                  "backupType": {
+                    "id": 0,
+                    "name": "Backup"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.V2.ApiBackup"
+                },
+                "example": {
+                  "ticketingCompany": "CW Company",
+                  "status": {
+                    "id": 2,
+                    "name": "Warning"
+                  },
+                  "daysInStatus": 0.24,
+                  "isVerified": false,
+                  "lastResult": "2024-10-15T21:59:44",
+                  "lastSuccess": "2024-10-15T21:59:44",
+                  "ticketCount": 1,
+                  "failureThreshold": 3,
+                  "treatWarningAsSuccess": true,
+                  "note": "Some note from user",
+                  "dayStartHour": 0,
+                  "tags": ["Veeam"],
+                  "standalone": true,
+                  "history": [
+                    {
+                      "status": {
+                        "id": 1,
+                        "name": "Success"
+                      },
+                      "lastResultDate": "2024-10-15T00:00:00",
+                      "isScheduled": true,
+                      "daysInStatus": 0.3,
+                      "date": "2024-10-15T00:00:00",
+                      "countFailure": 0,
+                      "countWarning": 0,
+                      "countSuccess": 1,
+                      "countNoResult": 0,
+                      "daysSinceLastResult": 0.3,
+                      "daysSinceLastGoodResult": 0.3,
+                      "resultsCount": 1
+                    }
+                  ],
+                  "backupId": 1003,
+                  "companyName": "XYZ Company",
+                  "deviceName": "BR-DVS01",
+                  "deviceType": "Server",
+                  "jobName": "BR Daily Report",
+                  "methodName": "Veeam",
+                  "backupType": {
+                    "id": 0,
+                    "name": "Backup"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "There is no backup #1004 scheduled for 10/15/2024"
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "There is no backup #1004 scheduled for 10/15/2024"
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "There is no backup #1004 scheduled for 10/15/2024"
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Quota exceeded. Maximum requests allowed: 1 per 5s. Please try again in 4 second(s)."
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Quota exceeded. Maximum requests allowed: 1 per 5s. Please try again in 4 second(s)."
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Quota exceeded. Maximum requests allowed: 1 per 5s. Please try again in 4 second(s)."
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ]
+      }
+    },
+    "/backups/{backupId}/results": {
+      "get": {
+        "tags": ["Backups"],
+        "summary": "Get results for backups for date.",
+        "description": "Returns all backup results for a given date.\r\n            \r\nThrottling backups: not often than 1 request per 0.5 seconds.",
+        "parameters": [
+          {
+            "name": "backupId",
+            "in": "path",
+            "description": "Backup Id.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "description": "Date. <para />(Example: 2018-02-14).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.V2.ApiPaginatedViewModel`1[[BackupRadar.Models.PublicAPI.ApiResult, BackupRadar.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                },
+                "example": {
+                  "Total": 2,
+                  "Page": 1,
+                  "PageSize": -1,
+                  "TotalPages": 2,
+                  "Results": [
+                    {
+                      "dateTime": "2022-05-03T02:00:10",
+                      "success": true,
+                      "warning": false,
+                      "failure": false,
+                      "manual": false,
+                      "resultId": "2151798_637871400100000000_1"
+                    },
+                    {
+                      "dateTime": "2022-05-05T02:00:03",
+                      "success": false,
+                      "warning": false,
+                      "failure": true,
+                      "manual": false,
+                      "resultId": "2151798_637873128030000000_4"
+                    }
+                  ]
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.V2.ApiPaginatedViewModel`1[[BackupRadar.Models.PublicAPI.ApiResult, BackupRadar.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                },
+                "example": {
+                  "Total": 2,
+                  "Page": 1,
+                  "PageSize": -1,
+                  "TotalPages": 2,
+                  "Results": [
+                    {
+                      "dateTime": "2022-05-03T02:00:10",
+                      "success": true,
+                      "warning": false,
+                      "failure": false,
+                      "manual": false,
+                      "resultId": "2151798_637871400100000000_1"
+                    },
+                    {
+                      "dateTime": "2022-05-05T02:00:03",
+                      "success": false,
+                      "warning": false,
+                      "failure": true,
+                      "manual": false,
+                      "resultId": "2151798_637873128030000000_4"
+                    }
+                  ]
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.V2.ApiPaginatedViewModel`1[[BackupRadar.Models.PublicAPI.ApiResult, BackupRadar.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                },
+                "example": {
+                  "Total": 2,
+                  "Page": 1,
+                  "PageSize": -1,
+                  "TotalPages": 2,
+                  "Results": [
+                    {
+                      "dateTime": "2022-05-03T02:00:10",
+                      "success": true,
+                      "warning": false,
+                      "failure": false,
+                      "manual": false,
+                      "resultId": "2151798_637871400100000000_1"
+                    },
+                    {
+                      "dateTime": "2022-05-05T02:00:03",
+                      "success": false,
+                      "warning": false,
+                      "failure": true,
+                      "manual": false,
+                      "resultId": "2151798_637873128030000000_4"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Invalid ApiKey"
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Invalid ApiKey"
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Invalid ApiKey"
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Quota exceeded. Maximum requests allowed: 1 per 5s. Please try again in 4 second(s)."
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Quota exceeded. Maximum requests allowed: 1 per 5s. Please try again in 4 second(s)."
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Quota exceeded. Maximum requests allowed: 1 per 5s. Please try again in 4 second(s)."
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ]
+      }
+    },
+    "/backups/filters": {
+      "get": {
+        "tags": ["Backups"],
+        "summary": "Get the available filters.",
+        "description": "Returns the available filters such as Tags, Companies, Statuses, etc.\r\n            \r\nThrottling policy: not often than 1 request per 0.5 seconds.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "deviceTypes": ["Server", "Workstation"],
+                  "companies": [
+                    "ABC Company",
+                    "DEF Company",
+                    "GHI Company",
+                    "JKL Company",
+                    "NOP Company",
+                    "QRS Company",
+                    "TUV Company",
+                    "WWW Company",
+                    "XYZ Company"
+                  ],
+                  "backupMethods": [
+                    "Veeam",
+                    "Altaro",
+                    "AWS",
+                    "BackupExec",
+                    "Datto",
+                    "Windows Backups",
+                    "Replibit API"
+                  ],
+                  "statuses": [
+                    "Success",
+                    "Warning",
+                    "Failure",
+                    "No Result",
+                    "Pending"
+                  ],
+                  "tags": [
+                    "Important",
+                    "Chris",
+                    "Mike",
+                    "Jake",
+                    "Ignore",
+                    "Manual"
+                  ],
+                  "policyTypes": ["Backup", "Alert"]
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "deviceTypes": ["Server", "Workstation"],
+                  "companies": [
+                    "ABC Company",
+                    "DEF Company",
+                    "GHI Company",
+                    "JKL Company",
+                    "NOP Company",
+                    "QRS Company",
+                    "TUV Company",
+                    "WWW Company",
+                    "XYZ Company"
+                  ],
+                  "backupMethods": [
+                    "Veeam",
+                    "Altaro",
+                    "AWS",
+                    "BackupExec",
+                    "Datto",
+                    "Windows Backups",
+                    "Replibit API"
+                  ],
+                  "statuses": [
+                    "Success",
+                    "Warning",
+                    "Failure",
+                    "No Result",
+                    "Pending"
+                  ],
+                  "tags": [
+                    "Important",
+                    "Chris",
+                    "Mike",
+                    "Jake",
+                    "Ignore",
+                    "Manual"
+                  ],
+                  "policyTypes": ["Backup", "Alert"]
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "deviceTypes": ["Server", "Workstation"],
+                  "companies": [
+                    "ABC Company",
+                    "DEF Company",
+                    "GHI Company",
+                    "JKL Company",
+                    "NOP Company",
+                    "QRS Company",
+                    "TUV Company",
+                    "WWW Company",
+                    "XYZ Company"
+                  ],
+                  "backupMethods": [
+                    "Veeam",
+                    "Altaro",
+                    "AWS",
+                    "BackupExec",
+                    "Datto",
+                    "Windows Backups",
+                    "Replibit API"
+                  ],
+                  "statuses": [
+                    "Success",
+                    "Warning",
+                    "Failure",
+                    "No Result",
+                    "Pending"
+                  ],
+                  "tags": [
+                    "Important",
+                    "Chris",
+                    "Mike",
+                    "Jake",
+                    "Ignore",
+                    "Manual"
+                  ],
+                  "policyTypes": ["Backup", "Alert"]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "ApiKey is not provided"
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "ApiKey is not provided"
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "ApiKey is not provided"
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Quota exceeded. Maximum requests allowed: 1 per 5s. Please try again in 4 second(s)."
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Quota exceeded. Maximum requests allowed: 1 per 5s. Please try again in 4 second(s)."
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Quota exceeded. Maximum requests allowed: 1 per 5s. Please try again in 4 second(s)."
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ]
+      }
+    },
+    "/backups/inactive": {
+      "get": {
+        "tags": ["Backups"],
+        "summary": "Get inactive backups.",
+        "description": "Returns inactive backups ready to activate.\r\n            \r\nThrottling policy: not often than 1 request per 0.5 seconds.",
+        "parameters": [
+          {
+            "name": "SearchByCompanyName",
+            "in": "query",
+            "description": "Search by company name.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SearchByDeviceName",
+            "in": "query",
+            "description": "Search by device name.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SearchByJobName",
+            "in": "query",
+            "description": "Search by job name.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SearchByBackupMethod",
+            "in": "query",
+            "description": "Search by backup method.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SearchByEmailFrom",
+            "in": "query",
+            "description": "Search by email.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SearchByBackupType",
+            "in": "query",
+            "description": "Search by backup type.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "description": "Page number to get from the API. Default: 1.",
+            "schema": {
+              "maximum": 2147483647,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Size",
+            "in": "query",
+            "description": "Size of the page to get from the API. Default: 50. Max page size: 1000.",
+            "schema": {
+              "maximum": 1000,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.V2.ApiPaginatedViewModel`1[[BackupRadar.Models.PublicAPI.V2.ApiBackupInactive, BackupRadar.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                },
+                "example": {
+                  "Total": 3,
+                  "Page": 1,
+                  "PageSize": 10,
+                  "TotalPages": 1,
+                  "Results": [
+                    {
+                      "emailFrom": "[Undefined]",
+                      "lastReceived": "2024-10-15T23:35:44",
+                      "backupId": 12001,
+                      "companyName": "[Undefined]",
+                      "deviceName": "SERVER01",
+                      "jobName": "OneTwo - (dead0000beef)",
+                      "methodName": "Datto API",
+                      "backupType": {
+                        "id": 0,
+                        "name": "Backup"
+                      }
+                    },
+                    {
+                      "emailFrom": "[Undefined]",
+                      "lastReceived": "2024-10-15T13:02:08",
+                      "backupId": 12002,
+                      "companyName": "[Undefined]",
+                      "deviceName": "SERVER01",
+                      "jobName": "OneTwo - (dead0000beef) - Local Verification",
+                      "methodName": "Datto API",
+                      "backupType": {
+                        "id": 0,
+                        "name": "Backup"
+                      }
+                    },
+                    {
+                      "emailFrom": "br@example.com",
+                      "lastReceived": "2024-10-15T18:18:56",
+                      "backupId": 12003,
+                      "companyName": "[Undefined]",
+                      "deviceName": "Laptop 127.0.0.1",
+                      "jobName": "DVS PC - Screenshot",
+                      "methodName": "Veeam",
+                      "backupType": {
+                        "id": 1,
+                        "name": "Alert"
+                      }
+                    }
+                  ]
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.V2.ApiPaginatedViewModel`1[[BackupRadar.Models.PublicAPI.V2.ApiBackupInactive, BackupRadar.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                },
+                "example": {
+                  "Total": 3,
+                  "Page": 1,
+                  "PageSize": 10,
+                  "TotalPages": 1,
+                  "Results": [
+                    {
+                      "emailFrom": "[Undefined]",
+                      "lastReceived": "2024-10-15T23:35:44",
+                      "backupId": 12001,
+                      "companyName": "[Undefined]",
+                      "deviceName": "SERVER01",
+                      "jobName": "OneTwo - (dead0000beef)",
+                      "methodName": "Datto API",
+                      "backupType": {
+                        "id": 0,
+                        "name": "Backup"
+                      }
+                    },
+                    {
+                      "emailFrom": "[Undefined]",
+                      "lastReceived": "2024-10-15T13:02:08",
+                      "backupId": 12002,
+                      "companyName": "[Undefined]",
+                      "deviceName": "SERVER01",
+                      "jobName": "OneTwo - (dead0000beef) - Local Verification",
+                      "methodName": "Datto API",
+                      "backupType": {
+                        "id": 0,
+                        "name": "Backup"
+                      }
+                    },
+                    {
+                      "emailFrom": "br@example.com",
+                      "lastReceived": "2024-10-15T18:18:56",
+                      "backupId": 12003,
+                      "companyName": "[Undefined]",
+                      "deviceName": "Laptop 127.0.0.1",
+                      "jobName": "DVS PC - Screenshot",
+                      "methodName": "Veeam",
+                      "backupType": {
+                        "id": 1,
+                        "name": "Alert"
+                      }
+                    }
+                  ]
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.V2.ApiPaginatedViewModel`1[[BackupRadar.Models.PublicAPI.V2.ApiBackupInactive, BackupRadar.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                },
+                "example": {
+                  "Total": 3,
+                  "Page": 1,
+                  "PageSize": 10,
+                  "TotalPages": 1,
+                  "Results": [
+                    {
+                      "emailFrom": "[Undefined]",
+                      "lastReceived": "2024-10-15T23:35:44",
+                      "backupId": 12001,
+                      "companyName": "[Undefined]",
+                      "deviceName": "SERVER01",
+                      "jobName": "OneTwo - (dead0000beef)",
+                      "methodName": "Datto API",
+                      "backupType": {
+                        "id": 0,
+                        "name": "Backup"
+                      }
+                    },
+                    {
+                      "emailFrom": "[Undefined]",
+                      "lastReceived": "2024-10-15T13:02:08",
+                      "backupId": 12002,
+                      "companyName": "[Undefined]",
+                      "deviceName": "SERVER01",
+                      "jobName": "OneTwo - (dead0000beef) - Local Verification",
+                      "methodName": "Datto API",
+                      "backupType": {
+                        "id": 0,
+                        "name": "Backup"
+                      }
+                    },
+                    {
+                      "emailFrom": "br@example.com",
+                      "lastReceived": "2024-10-15T18:18:56",
+                      "backupId": 12003,
+                      "companyName": "[Undefined]",
+                      "deviceName": "Laptop 127.0.0.1",
+                      "jobName": "DVS PC - Screenshot",
+                      "methodName": "Veeam",
+                      "backupType": {
+                        "id": 1,
+                        "name": "Alert"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "ApiKey is not provided"
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "ApiKey is not provided"
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "ApiKey is not provided"
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Quota exceeded. Maximum requests allowed: 1 per 5s. Please try again in 4 second(s)."
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Quota exceeded. Maximum requests allowed: 1 per 5s. Please try again in 4 second(s)."
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Quota exceeded. Maximum requests allowed: 1 per 5s. Please try again in 4 second(s)."
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ]
+      }
+    },
+    "/backups/retired": {
+      "get": {
+        "tags": ["Backups"],
+        "summary": "Get retired backups.",
+        "description": "Returns retired backups.\r\n            \r\nThrottling policy: not often than 1 request per 0.5 seconds.",
+        "parameters": [
+          {
+            "name": "SearchByCompanyName",
+            "in": "query",
+            "description": "Search by company name.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SearchByDeviceName",
+            "in": "query",
+            "description": "Search by device name.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SearchByJobName",
+            "in": "query",
+            "description": "Search by job name.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SearchByBackupMethod",
+            "in": "query",
+            "description": "Search by backup method.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SearchByEmailFrom",
+            "in": "query",
+            "description": "Search by email.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SearchByRetireMessage",
+            "in": "query",
+            "description": "Search by retire message.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SearchByRetiredBy",
+            "in": "query",
+            "description": "Search by user who retired backup.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SearchByRetiredDateStart",
+            "in": "query",
+            "description": "Search by retired backup date start.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "SearchByRetiredDateEnd",
+            "in": "query",
+            "description": "Search by retired backup date end.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "description": "Page number to get from the API. Default: 1.",
+            "schema": {
+              "maximum": 2147483647,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Size",
+            "in": "query",
+            "description": "Size of the page to get from the API. Default: 50. Max page size: 1000.",
+            "schema": {
+              "maximum": 1000,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.V2.ApiPaginatedViewModel`1[[BackupRadar.Models.PublicAPI.V2.ApiBackupInactive, BackupRadar.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                },
+                "example": {
+                  "Total": 2,
+                  "Page": 1,
+                  "PageSize": 10,
+                  "TotalPages": 1,
+                  "Results": [
+                    {
+                      "RetireMessage": "test message",
+                      "RetiredDate": "2024-10-12T01:59:44",
+                      "RetiredBy": "[Undefined]",
+                      "emailFrom": "[Undefined]",
+                      "lastReceived": "2024-10-11T01:59:44",
+                      "backupId": 12004,
+                      "companyName": "OneTwo Inc.",
+                      "deviceName": "SERVER01",
+                      "jobName": "OneTwo - (dead0000beef)",
+                      "methodName": "Datto API",
+                      "backupType": {
+                        "id": 0,
+                        "name": "Backup"
+                      }
+                    },
+                    {
+                      "RetireMessage": "test message",
+                      "RetiredDate": "2024-10-13T01:59:44",
+                      "RetiredBy": "br@example.com",
+                      "emailFrom": "br@example.com",
+                      "lastReceived": "2024-10-12T01:59:44",
+                      "backupId": 12005,
+                      "companyName": "Liberty LLC",
+                      "deviceName": "Laptop 127.0.0.2",
+                      "jobName": "JFK - Screenshot",
+                      "methodName": "Veeam",
+                      "backupType": {
+                        "id": 1,
+                        "name": "Alert"
+                      }
+                    }
+                  ]
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.V2.ApiPaginatedViewModel`1[[BackupRadar.Models.PublicAPI.V2.ApiBackupInactive, BackupRadar.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                },
+                "example": {
+                  "Total": 2,
+                  "Page": 1,
+                  "PageSize": 10,
+                  "TotalPages": 1,
+                  "Results": [
+                    {
+                      "RetireMessage": "test message",
+                      "RetiredDate": "2024-10-12T01:59:44",
+                      "RetiredBy": "[Undefined]",
+                      "emailFrom": "[Undefined]",
+                      "lastReceived": "2024-10-11T01:59:44",
+                      "backupId": 12004,
+                      "companyName": "OneTwo Inc.",
+                      "deviceName": "SERVER01",
+                      "jobName": "OneTwo - (dead0000beef)",
+                      "methodName": "Datto API",
+                      "backupType": {
+                        "id": 0,
+                        "name": "Backup"
+                      }
+                    },
+                    {
+                      "RetireMessage": "test message",
+                      "RetiredDate": "2024-10-13T01:59:44",
+                      "RetiredBy": "br@example.com",
+                      "emailFrom": "br@example.com",
+                      "lastReceived": "2024-10-12T01:59:44",
+                      "backupId": 12005,
+                      "companyName": "Liberty LLC",
+                      "deviceName": "Laptop 127.0.0.2",
+                      "jobName": "JFK - Screenshot",
+                      "methodName": "Veeam",
+                      "backupType": {
+                        "id": 1,
+                        "name": "Alert"
+                      }
+                    }
+                  ]
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.V2.ApiPaginatedViewModel`1[[BackupRadar.Models.PublicAPI.V2.ApiBackupInactive, BackupRadar.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                },
+                "example": {
+                  "Total": 2,
+                  "Page": 1,
+                  "PageSize": 10,
+                  "TotalPages": 1,
+                  "Results": [
+                    {
+                      "RetireMessage": "test message",
+                      "RetiredDate": "2024-10-12T01:59:44",
+                      "RetiredBy": "[Undefined]",
+                      "emailFrom": "[Undefined]",
+                      "lastReceived": "2024-10-11T01:59:44",
+                      "backupId": 12004,
+                      "companyName": "OneTwo Inc.",
+                      "deviceName": "SERVER01",
+                      "jobName": "OneTwo - (dead0000beef)",
+                      "methodName": "Datto API",
+                      "backupType": {
+                        "id": 0,
+                        "name": "Backup"
+                      }
+                    },
+                    {
+                      "RetireMessage": "test message",
+                      "RetiredDate": "2024-10-13T01:59:44",
+                      "RetiredBy": "br@example.com",
+                      "emailFrom": "br@example.com",
+                      "lastReceived": "2024-10-12T01:59:44",
+                      "backupId": 12005,
+                      "companyName": "Liberty LLC",
+                      "deviceName": "Laptop 127.0.0.2",
+                      "jobName": "JFK - Screenshot",
+                      "methodName": "Veeam",
+                      "backupType": {
+                        "id": 1,
+                        "name": "Alert"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "ApiKey is not provided"
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "ApiKey is not provided"
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "ApiKey is not provided"
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Quota exceeded. Maximum requests allowed: 1 per 5s. Please try again in 4 second(s)."
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Quota exceeded. Maximum requests allowed: 1 per 5s. Please try again in 4 second(s)."
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Quota exceeded. Maximum requests allowed: 1 per 5s. Please try again in 4 second(s)."
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ]
+      }
+    },
+    "/backups/overview": {
+      "get": {
+        "tags": ["Backups"],
+        "summary": "Get overview counts.",
+        "description": "Get amount of policies, backups, servers and workstations.\r\n            \r\nThrottling policy: not often than 1 request per 0.5 seconds.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.V2.ApiOverviewCounts"
+                },
+                "example": {
+                  "backups": 1056,
+                  "office365": 44,
+                  "workstations": 10,
+                  "activePolicies": 1280,
+                  "inactivePolicies": 76,
+                  "retiredPolicies": 549
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.V2.ApiOverviewCounts"
+                },
+                "example": {
+                  "backups": 1056,
+                  "office365": 44,
+                  "workstations": 10,
+                  "activePolicies": 1280,
+                  "inactivePolicies": 76,
+                  "retiredPolicies": 549
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.V2.ApiOverviewCounts"
+                },
+                "example": {
+                  "backups": 1056,
+                  "office365": 44,
+                  "workstations": 10,
+                  "activePolicies": 1280,
+                  "inactivePolicies": 76,
+                  "retiredPolicies": 549
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "ApiKey is not provided"
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "ApiKey is not provided"
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "ApiKey is not provided"
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Quota exceeded. Maximum requests allowed: 1 per 5s. Please try again in 4 second(s)."
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Quota exceeded. Maximum requests allowed: 1 per 5s. Please try again in 4 second(s)."
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Quota exceeded. Maximum requests allowed: 1 per 5s. Please try again in 4 second(s)."
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BackupRadar.Models.PublicAPI.ApiIdName": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "BackupRadar.Models.PublicAPI.ApiResult": {
+        "type": "object",
+        "properties": {
+          "dateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "warning": {
+            "type": "boolean"
+          },
+          "failure": {
+            "type": "boolean"
+          },
+          "manual": {
+            "type": "boolean"
+          },
+          "resultId": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "BackupRadar.Models.PublicAPI.V2.ApiBackup": {
+        "type": "object",
+        "properties": {
+          "ticketingCompany": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.ApiIdName"
+          },
+          "daysInStatus": {
+            "type": "number",
+            "format": "double"
+          },
+          "isVerified": {
+            "type": "boolean"
+          },
+          "lastResult": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lastSuccess": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "ticketCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "failureThreshold": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "treatWarningAsSuccess": {
+            "type": "boolean"
+          },
+          "note": {
+            "type": "string",
+            "nullable": true
+          },
+          "dayStartHour": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "standalone": {
+            "type": "boolean"
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.V2.ApiBackupsHistory"
+            },
+            "nullable": true
+          },
+          "backupId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "companyName": {
+            "type": "string",
+            "nullable": true
+          },
+          "deviceName": {
+            "type": "string",
+            "nullable": true
+          },
+          "deviceType": {
+            "type": "string",
+            "nullable": true
+          },
+          "jobName": {
+            "type": "string",
+            "nullable": true
+          },
+          "methodName": {
+            "type": "string",
+            "nullable": true
+          },
+          "backupType": {
+            "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.ApiIdName"
+          }
+        },
+        "additionalProperties": false
+      },
+      "BackupRadar.Models.PublicAPI.V2.ApiBackupInactive": {
+        "type": "object",
+        "properties": {
+          "emailFrom": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastReceived": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "backupId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "companyName": {
+            "type": "string",
+            "nullable": true
+          },
+          "deviceName": {
+            "type": "string",
+            "nullable": true
+          },
+          "deviceType": {
+            "type": "string",
+            "nullable": true
+          },
+          "jobName": {
+            "type": "string",
+            "nullable": true
+          },
+          "methodName": {
+            "type": "string",
+            "nullable": true
+          },
+          "backupType": {
+            "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.ApiIdName"
+          }
+        },
+        "additionalProperties": false
+      },
+      "BackupRadar.Models.PublicAPI.V2.ApiBackupsHistory": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.ApiIdName"
+          },
+          "lastResultDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "isScheduled": {
+            "type": "boolean"
+          },
+          "daysInStatus": {
+            "type": "number",
+            "format": "double"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "countFailure": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "countWarning": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "countSuccess": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "countNoResult": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "daysSinceLastResult": {
+            "type": "number",
+            "format": "double"
+          },
+          "daysSinceLastGoodResult": {
+            "type": "number",
+            "format": "double"
+          },
+          "resultsCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "BackupRadar.Models.PublicAPI.V2.ApiBrightGaugeBackup": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "job": {
+            "type": "string",
+            "nullable": true
+          },
+          "device": {
+            "type": "string",
+            "nullable": true
+          },
+          "company": {
+            "type": "string",
+            "nullable": true
+          },
+          "deviceType": {
+            "type": "string",
+            "nullable": true
+          },
+          "ticketingCompany": {
+            "type": "string",
+            "nullable": true
+          },
+          "method": {
+            "type": "string",
+            "nullable": true
+          },
+          "isVerified": {
+            "type": "boolean"
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.V2.ApiBackupsHistory"
+            },
+            "nullable": true
+          },
+          "results": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.ApiResult"
+              },
+              "nullable": true
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "BackupRadar.Models.PublicAPI.V2.ApiOverviewCounts": {
+        "type": "object",
+        "properties": {
+          "backups": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "office365": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "workstations": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "activePolicies": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "inactivePolicies": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "retiredPolicies": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "BackupRadar.Models.PublicAPI.V2.ApiPaginatedViewModel`1[[BackupRadar.Models.PublicAPI.ApiResult, BackupRadar.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]": {
+        "type": "object",
+        "properties": {
+          "Total": {
+            "type": "integer",
+            "description": "Total results.",
+            "format": "int32"
+          },
+          "Page": {
+            "type": "integer",
+            "description": "Page number (starting from 1).",
+            "format": "int32"
+          },
+          "PageSize": {
+            "type": "integer",
+            "description": "Items per page.",
+            "format": "int32"
+          },
+          "TotalPages": {
+            "type": "integer",
+            "description": "Total pages.",
+            "format": "int32",
+            "readOnly": true
+          },
+          "Results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.ApiResult"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "BackupRadar.Models.PublicAPI.V2.ApiPaginatedViewModel`1[[BackupRadar.Models.PublicAPI.V2.ApiBackup, BackupRadar.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]": {
+        "type": "object",
+        "properties": {
+          "Total": {
+            "type": "integer",
+            "description": "Total results.",
+            "format": "int32"
+          },
+          "Page": {
+            "type": "integer",
+            "description": "Page number (starting from 1).",
+            "format": "int32"
+          },
+          "PageSize": {
+            "type": "integer",
+            "description": "Items per page.",
+            "format": "int32"
+          },
+          "TotalPages": {
+            "type": "integer",
+            "description": "Total pages.",
+            "format": "int32",
+            "readOnly": true
+          },
+          "Results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.V2.ApiBackup"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "BackupRadar.Models.PublicAPI.V2.ApiPaginatedViewModel`1[[BackupRadar.Models.PublicAPI.V2.ApiBackupInactive, BackupRadar.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]": {
+        "type": "object",
+        "properties": {
+          "Total": {
+            "type": "integer",
+            "description": "Total results.",
+            "format": "int32"
+          },
+          "Page": {
+            "type": "integer",
+            "description": "Page number (starting from 1).",
+            "format": "int32"
+          },
+          "PageSize": {
+            "type": "integer",
+            "description": "Items per page.",
+            "format": "int32"
+          },
+          "TotalPages": {
+            "type": "integer",
+            "description": "Total pages.",
+            "format": "int32",
+            "readOnly": true
+          },
+          "Results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.V2.ApiBackupInactive"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "BackupRadar.Models.PublicAPI.V2.ApiPaginatedViewModel`1[[BackupRadar.Models.PublicAPI.V2.ApiBrightGaugeBackup, BackupRadar.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]": {
+        "type": "object",
+        "properties": {
+          "Total": {
+            "type": "integer",
+            "description": "Total results.",
+            "format": "int32"
+          },
+          "Page": {
+            "type": "integer",
+            "description": "Page number (starting from 1).",
+            "format": "int32"
+          },
+          "PageSize": {
+            "type": "integer",
+            "description": "Items per page.",
+            "format": "int32"
+          },
+          "TotalPages": {
+            "type": "integer",
+            "description": "Total pages.",
+            "format": "int32",
+            "readOnly": true
+          },
+          "Results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BackupRadar.Models.PublicAPI.V2.ApiBrightGaugeBackup"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "ApiKey": {
+        "type": "apiKey",
+        "description": "Please provide your API Key.",
+        "name": "ApiKey",
+        "in": "header"
+      }
+    }
+  }
+}
