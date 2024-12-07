@@ -49,7 +49,7 @@ class BackupRadarAPI:
         self,
         query_params: BackupRadarSingleBackupQueryParams,
     ) -> BackupRadarResultModel | None:
-        """Get details on a single backup."""
+        """Get backup results for a given backup for a given day."""
         params = query_params.model_dump(exclude_unset=True)
 
         try:
@@ -64,7 +64,7 @@ class BackupRadarAPI:
         self,
         query_params: BackupRadarSingleBackupQueryParams,
     ) -> BackupRadarResultModel | None:
-        """Get details on a single backup."""
+        """Get backup data for a given backup on a given day."""
         params = query_params.model_dump(exclude_unset=True)
 
         try:
