@@ -20,7 +20,10 @@ def to_snake(string: str) -> str:
 
 
 class BackupRadarStatusModel(BaseModel):
-    """Status model for BackupRadar responses, contains id and status name."""
+    """Status model for BackupRadar responses, contains id and status name.
+
+    Used in: /backups, /backups/bg, /backups/{backupId}, /backups/inactive
+    """
 
     model_config = ConfigDict(alias_generator=to_snake)
     id: int
@@ -28,7 +31,10 @@ class BackupRadarStatusModel(BaseModel):
 
 
 class BackupRadarHistoryModel(BaseModel):
-    """Model for backup history from BackupRadar list response."""
+    """Model for backup history from BackupRadar list response.
+
+    Used in: /backups, /backups/bg, /backups/{backupId}
+    """
 
     status: BackupRadarStatusModel
     last_result_date: str | None = None
@@ -45,7 +51,10 @@ class BackupRadarHistoryModel(BaseModel):
 
 
 class BackupRadarResultModel(BaseModel):
-    """Overarching model for BackupRadar results including details about status, company, and history."""
+    """Overarching model for BackupRadar results including status, company, and history.
+
+    Used in: /backups, /backups/{backupId}
+    """
 
     ticketing_company: str | None = None
     status: BackupRadarStatusModel
@@ -67,11 +76,14 @@ class BackupRadarResultModel(BaseModel):
     device_type: str | None = None
     job_name: str | None = None
     method_name: str | None = None
-    backup_type: BackupRadarStatusModel  # I don't think this is correct?
+    backup_type: BackupRadarStatusModel
 
 
 class BackupRadarResponseModel(BaseModel):
-    """Model for paginated responses, contains list of BackupRadar results."""
+    """Model for paginated responses, contains list of BackupRadar results.
+
+    Used in: /backups
+    """
 
     total: int
     page: int
@@ -81,14 +93,19 @@ class BackupRadarResponseModel(BaseModel):
 
 
 class BackupRadarSingleBackupQueryParams(BaseModel):
-    """Query params for fetching a single backup by ID, with optional date filter."""
+    """Query params for fetching a single backup by ID, with optional date filter.
 
-    backup_id: int
+    Used in: /backups/{backupId}
+    """
+
     date: str | None = None
 
 
 class BackupRadarQueryParams(BaseModel):
-    """Model for query parameters to filter backup results, includes various search filters."""
+    """Model for query parameters to filter backup results, includes search filters.
+
+    Used in: /backups
+    """
 
     page: int = 1
     size: int = 50
@@ -116,7 +133,10 @@ class BackupRadarQueryParams(BaseModel):
 
 
 class BackupRadarInactiveBackupModel(BaseModel):
-    """Model for inactive backup records, includes device and job details."""
+    """Model for inactive backup records, includes device and job details.
+
+    Used in: /backups/inactive, /backups/retired
+    """
 
     email_from: str | None = None
     last_received: str | None = None
@@ -126,21 +146,14 @@ class BackupRadarInactiveBackupModel(BaseModel):
     device_type: str | None = None
     job_name: str | None = None
     method_name: str | None = None
-    backup_type: StatusModel
-
-
-class BackupRadarPaginatedResponse(BaseModel):
-    """Generic paginated response model, used for standard results."""
-
-    total: int
-    page: int
-    page_size: int
-    total_pages: int
-    results: list[BackupRadarResultModel] | None = None
+    backup_type: BackupRadarStatusModel
 
 
 class BackupRadarInactivePaginatedResponse(BaseModel):
-    """Paginated response model for inactive backups."""
+    """Paginated response model for inactive backups.
+
+    Used in: /backups/inactive, /backups/retired
+    """
 
     total: int
     page: int
@@ -150,7 +163,10 @@ class BackupRadarInactivePaginatedResponse(BaseModel):
 
 
 class BackupRadarOverviewCountsModel(BaseModel):
-    """Model for backup overview counts, provides totals for backups, policies, and workstations."""
+    """Model for backup counts, provides totals for backups, policies, and workstations.
+
+    Used in: /backups/overview
+    """
 
     backups: int
     office365: int
@@ -161,7 +177,10 @@ class BackupRadarOverviewCountsModel(BaseModel):
 
 
 class BackupRadarFiltersResponseModel(BaseModel):
-    """Model for the available filter options, including device types, companies, methods, etc."""
+    """Model for the available filter options.
+
+    Used in: /backups/filters
+    """
 
     device_types: list[str] | None = None
     companies: list[str] | None = None
@@ -172,7 +191,10 @@ class BackupRadarFiltersResponseModel(BaseModel):
 
 
 class BackupRadarBackupResultModel(BaseModel):
-    """Model representing individual backup results for a specific date."""
+    """Model representing individual backup results for a specific date.
+
+    Used in: /backups/{backupId}/results
+    """
 
     date_time: str
     success: bool
@@ -183,7 +205,10 @@ class BackupRadarBackupResultModel(BaseModel):
 
 
 class BackupRadarBrightGaugeBackupModel(BaseModel):
-    """Model for BrightGauge backups, includes details about device, job, and backup results."""
+    """Model for BrightGauge backups, includes device, job, and backup results.
+
+    Used in: /backups/bg
+    """
 
     id: int
     job: str | None = None
@@ -195,3 +220,35 @@ class BackupRadarBrightGaugeBackupModel(BaseModel):
     is_verified: bool
     history: list[BackupRadarHistoryModel] | None = None
     results: dict[str, list[BackupRadarBackupResultModel]] | None = None
+
+
+class BackupRadarPaginatedResponse(BaseModel):
+    """Generic paginated response model, used for standard results.
+
+    Used in: /backups, /backups/bg
+    """
+
+    total: int
+    page: int
+    page_size: int
+    total_pages: int
+    results: list[BackupRadarBackupResultModel] | None = None
+
+
+class BackupRadarRetiredQueryParams(BaseModel):
+    """Query parameters for filtering retired backups.
+
+    Used in: /backups/retired
+    """
+
+    search_by_company_name: str | None = None
+    search_by_device_name: str | None = None
+    search_by_job_name: str | None = None
+    search_by_backup_method: str | None = None
+    search_by_email_from: str | None = None
+    search_by_retire_message: str | None = None
+    search_by_retired_by: str | None = None
+    search_by_retired_date_start: str | None = None
+    search_by_retired_date_end: str | None = None
+    page: int = 1
+    size: int = 50
