@@ -19,18 +19,23 @@ def to_snake(string: str) -> str:
     return regex_for_camel.sub("_", string).lower()
 
 
-class BackupRadarStatusModel(BaseModel):
+class BaseBackupRadarModel(BaseModel):
+    """Base model for BackupRadar API responses."""
+
+    model_config = ConfigDict(alias_generator=to_snake)
+
+
+class BackupRadarStatusModel(BaseBackupRadarModel):
     """Status model for BackupRadar responses, contains id and status name.
 
     Used in: /backups, /backups/bg, /backups/{backupId}, /backups/inactive
     """
 
-    model_config = ConfigDict(alias_generator=to_snake)
     id: int
     name: str | None = None
 
 
-class BackupRadarHistoryModel(BaseModel):
+class BackupRadarHistoryModel(BaseBackupRadarModel):
     """Model for backup history from BackupRadar list response.
 
     Used in: /backups, /backups/bg, /backups/{backupId}
@@ -50,7 +55,7 @@ class BackupRadarHistoryModel(BaseModel):
     results_count: int
 
 
-class BackupRadarResultModel(BaseModel):
+class BackupRadarResultModel(BaseBackupRadarModel):
     """Overarching model for BackupRadar results including status, company, and history.
 
     Used in: /backups, /backups/{backupId}
@@ -79,7 +84,7 @@ class BackupRadarResultModel(BaseModel):
     backup_type: BackupRadarStatusModel
 
 
-class BackupRadarResponseModel(BaseModel):
+class BackupRadarResponseModel(BaseBackupRadarModel):
     """Model for paginated responses, contains list of BackupRadar results.
 
     Used in: /backups
@@ -92,7 +97,7 @@ class BackupRadarResponseModel(BaseModel):
     results: list[BackupRadarResultModel] | None = None
 
 
-class BackupRadarSingleBackupQueryParams(BaseModel):
+class BackupRadarSingleBackupQueryParams(BaseBackupRadarModel):
     """Query params for fetching a single backup by ID, with optional date filter.
 
     Used in: /backups/{backupId}
@@ -101,7 +106,7 @@ class BackupRadarSingleBackupQueryParams(BaseModel):
     date: str | None = None
 
 
-class BackupRadarQueryParams(BaseModel):
+class BackupRadarQueryParams(BaseBackupRadarModel):
     """Model for query parameters to filter backup results, includes search filters.
 
     Used in: /backups
@@ -132,7 +137,7 @@ class BackupRadarQueryParams(BaseModel):
     policy_types: list[str] | None = None
 
 
-class BackupRadarInactiveBackupModel(BaseModel):
+class BackupRadarInactiveBackupModel(BaseBackupRadarModel):
     """Model for inactive backup records, includes device and job details.
 
     Used in: /backups/inactive, /backups/retired
@@ -149,7 +154,7 @@ class BackupRadarInactiveBackupModel(BaseModel):
     backup_type: BackupRadarStatusModel
 
 
-class BackupRadarInactivePaginatedResponse(BaseModel):
+class BackupRadarInactivePaginatedResponse(BaseBackupRadarModel):
     """Paginated response model for inactive backups.
 
     Used in: /backups/inactive, /backups/retired
@@ -162,7 +167,7 @@ class BackupRadarInactivePaginatedResponse(BaseModel):
     results: list[BackupRadarInactiveBackupModel] | None = None
 
 
-class BackupRadarOverviewCountsModel(BaseModel):
+class BackupRadarOverviewCountsModel(BaseBackupRadarModel):
     """Model for backup counts, provides totals for backups, policies, and workstations.
 
     Used in: /backups/overview
@@ -176,7 +181,7 @@ class BackupRadarOverviewCountsModel(BaseModel):
     retired_policies: int
 
 
-class BackupRadarFiltersResponseModel(BaseModel):
+class BackupRadarFiltersResponseModel(BaseBackupRadarModel):
     """Model for the available filter options.
 
     Used in: /backups/filters
@@ -190,7 +195,7 @@ class BackupRadarFiltersResponseModel(BaseModel):
     policy_types: list[str] | None = None
 
 
-class BackupRadarBackupResultModel(BaseModel):
+class BackupRadarBackupResultModel(BaseBackupRadarModel):
     """Model representing individual backup results for a specific date.
 
     Used in: /backups/{backupId}/results
@@ -204,7 +209,7 @@ class BackupRadarBackupResultModel(BaseModel):
     result_id: str | None = None
 
 
-class BackupRadarBrightGaugeBackupModel(BaseModel):
+class BackupRadarBrightGaugeBackupModel(BaseBackupRadarModel):
     """Model for BrightGauge backups, includes device, job, and backup results.
 
     Used in: /backups/bg
@@ -222,7 +227,7 @@ class BackupRadarBrightGaugeBackupModel(BaseModel):
     results: dict[str, list[BackupRadarBackupResultModel]] | None = None
 
 
-class BackupRadarPaginatedResponse(BaseModel):
+class BackupRadarPaginatedResponse(BaseBackupRadarModel):
     """Generic paginated response model, used for standard results.
 
     Used in: /backups, /backups/bg
@@ -235,7 +240,7 @@ class BackupRadarPaginatedResponse(BaseModel):
     results: list[BackupRadarBackupResultModel] | None = None
 
 
-class BackupRadarRetiredQueryParams(BaseModel):
+class BackupRadarRetiredQueryParams(BaseBackupRadarModel):
     """Query parameters for filtering retired backups.
 
     Used in: /backups/retired
