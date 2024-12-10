@@ -25,7 +25,7 @@ class BackupRadarAPI:
         self.base_url = f"{base_url}/backups"
         self.api_key = api_key
         self.headers = {
-            "Authorization": f"Bearer {self.api_key}",
+            "ApiKey": self.api_key,
             "Content-Type": "application/json",
         }
 
