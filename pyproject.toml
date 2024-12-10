@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "backupradar"
-version = "0.1.5"
-description = ""
+version = "0.1.6"
+description = "Python package for interacting with BackupRadar API."
 authors = ["0xChloe <chloe@catastrophesoftware.com>"]
 readme = "README.md"
 
