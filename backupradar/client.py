@@ -4,6 +4,7 @@ import logging
 
 import httpx
 from models import (
+    BackupRadarOverviewCountsModel,
     BackupRadarQueryParams,
     BackupRadarResponseModel,
     BackupRadarResultModel,
@@ -45,32 +46,59 @@ class BackupRadarAPI:
 
         return None
 
-    def get_backup_results(
+    def get_backup(
         self,
+        backup_id: int,
         query_params: BackupRadarSingleBackupQueryParams,
     ) -> BackupRadarResultModel | None:
-        """Get backup results for a given backup for a given day."""
-        params = query_params.model_dump(exclude_unset=True)
+        """Get backup data for a given backup on a given day.
 
+        Date is assumed to be today if not provided.
+        """
+        params = query_params.model_dump(exclude_unset=True)
+        url = self.base_url + "/" + f"{backup_id}"
         try:
-            response = httpx.get(url=self.base_url, headers=self.headers, params=params)
+            response = httpx.get(
+                url=url,
+                headers=self.headers,
+                params=params,
+            )
             response.raise_for_status()
             return BackupRadarResultModel.model_validate_json(response.text)
         except (httpx.HTTPStatusError, httpx.HTTPError):
             logging.exception("Request failed with error.")
             return None
 
-    def get_backup(
+    def get_backup_results(
         self,
+        backup_id: int,
         query_params: BackupRadarSingleBackupQueryParams,
     ) -> BackupRadarResultModel | None:
-        """Get backup data for a given backup on a given day."""
-        params = query_params.model_dump(exclude_unset=True)
+        """Get backup results for a given backup for a given day.
 
+        Date is assumed to be today if not provided.
+        """
+        params = query_params.model_dump(exclude_unset=True)
+        url = self.base_url + "/" + f"{backup_id}" + "/results"
         try:
-            response = httpx.get(url=self.base_url, headers=self.headers, params=params)
+            response = httpx.get(url=url, headers=self.headers, params=params)
             response.raise_for_status()
             return BackupRadarResultModel.model_validate_json(response.text)
+        except (httpx.HTTPStatusError, httpx.HTTPError):
+            logging.exception("Request failed with error.")
+            return None
+
+    def get_overview_counts(
+        self,
+    ) -> BackupRadarOverviewCountsModel | None:
+        """Get overview counts."""
+        url = self.base_url + "/overview"
+        try:
+            response = httpx.get(url=url, headers=self.headers)
+            response.raise_for_status()
+            return BackupRadarOverviewCountsModel.model_validate_json(
+                response.text,
+            )
         except (httpx.HTTPStatusError, httpx.HTTPError):
             logging.exception("Request failed with error.")
             return None

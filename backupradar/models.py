@@ -51,7 +51,7 @@ class BackupRadarHistoryModel(BaseModel):
 
 
 class BackupRadarResultModel(BaseModel):
-    """Overarching model for BackupRadar results including details about status, company, and history.
+    """Overarching model for BackupRadar results including status, company, and history.
 
     Used in: /backups, /backups/{backupId}
     """
@@ -98,12 +98,11 @@ class BackupRadarSingleBackupQueryParams(BaseModel):
     Used in: /backups/{backupId}
     """
 
-    backup_id: int
     date: str | None = None
 
 
 class BackupRadarQueryParams(BaseModel):
-    """Model for query parameters to filter backup results, includes various search filters.
+    """Model for query parameters to filter backup results, includes search filters.
 
     Used in: /backups
     """
@@ -150,19 +149,6 @@ class BackupRadarInactiveBackupModel(BaseModel):
     backup_type: BackupRadarStatusModel
 
 
-class BackupRadarPaginatedResponse(BaseModel):
-    """Generic paginated response model, used for standard results.
-
-    Used in: /backups, /backups/bg
-    """
-
-    total: int
-    page: int
-    page_size: int
-    total_pages: int
-    results: list[BackupRadarResultModel] | None = None
-
-
 class BackupRadarInactivePaginatedResponse(BaseModel):
     """Paginated response model for inactive backups.
 
@@ -177,7 +163,7 @@ class BackupRadarInactivePaginatedResponse(BaseModel):
 
 
 class BackupRadarOverviewCountsModel(BaseModel):
-    """Model for backup overview counts, provides totals for backups, policies, and workstations.
+    """Model for backup counts, provides totals for backups, policies, and workstations.
 
     Used in: /backups/overview
     """
@@ -191,7 +177,7 @@ class BackupRadarOverviewCountsModel(BaseModel):
 
 
 class BackupRadarFiltersResponseModel(BaseModel):
-    """Model for the available filter options, including device types, companies, methods, etc.
+    """Model for the available filter options.
 
     Used in: /backups/filters
     """
@@ -219,7 +205,7 @@ class BackupRadarBackupResultModel(BaseModel):
 
 
 class BackupRadarBrightGaugeBackupModel(BaseModel):
-    """Model for BrightGauge backups, includes details about device, job, and backup results.
+    """Model for BrightGauge backups, includes device, job, and backup results.
 
     Used in: /backups/bg
     """
@@ -234,3 +220,35 @@ class BackupRadarBrightGaugeBackupModel(BaseModel):
     is_verified: bool
     history: list[BackupRadarHistoryModel] | None = None
     results: dict[str, list[BackupRadarBackupResultModel]] | None = None
+
+
+class BackupRadarPaginatedResponse(BaseModel):
+    """Generic paginated response model, used for standard results.
+
+    Used in: /backups, /backups/bg
+    """
+
+    total: int
+    page: int
+    page_size: int
+    total_pages: int
+    results: list[BackupRadarBackupResultModel] | None = None
+
+
+class BackupRadarRetiredQueryParams(BaseModel):
+    """Query parameters for filtering retired backups.
+
+    Used in: /backups/retired
+    """
+
+    search_by_company_name: str | None = None
+    search_by_device_name: str | None = None
+    search_by_job_name: str | None = None
+    search_by_backup_method: str | None = None
+    search_by_email_from: str | None = None
+    search_by_retire_message: str | None = None
+    search_by_retired_by: str | None = None
+    search_by_retired_date_start: str | None = None
+    search_by_retired_date_end: str | None = None
+    page: int = 1
+    size: int = 50
